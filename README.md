@@ -224,6 +224,8 @@ for more info.)
 - [TimeSpeed](https://www.nexusmods.com/stardewvalley/mods/169) (Default: Off)
 - [Unlimited Players](https://www.nexusmods.com/stardewvalley/mods/2213) (Default: On)
 
+Add any additional mods to the `docker/mods` directory.
+
 ## Troubleshooting
 
 ### Waiting for Day to End
