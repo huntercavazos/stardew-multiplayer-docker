@@ -130,6 +130,8 @@ services:
       - ./valley_saves:/config/xdg/config/StardewValley/Saves
       # If you'd like to set an existing savegame before the first start otherwise this file will be edited when starting the first game
       - ./configs/autoload.json:/data/Stardew/game/Mods/AutoLoadGame/config.json
+      # Add mods here
+      - ./docker/mods:/data/Stardew/game/Mods/
     # deploy:
     #   ## The container is CPU hungry, you can limit using this block
     #   ## If you don't plan to play using VNC, 1 core should be enough to host for others
