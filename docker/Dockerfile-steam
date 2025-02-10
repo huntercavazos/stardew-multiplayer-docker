@@ -14,8 +14,7 @@ ENV GAME_PATH="/data/Stardew/game"
 ## lib32gcc-s1 is required for steamcmd
 RUN apt-get update && apt-get install -y wget unzip tar strace mono-complete xterm gettext-base jq netcat procps lib32gcc-s1 locales && apt-get clean
 
-# Game + ModLoader 1.6.2 4.0.1
-
+# Game + SMAPI 4.1.10
 RUN mkdir -p ${GAME_PATH} && \
     mkdir -p /data/nexus && \
     mkdir -p /data/steamcmd
@@ -25,11 +24,11 @@ RUN wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz 
     tar -xzvf steamcmd.tar.gz -C /data/steamcmd && \
     cd /data/steamcmd
 
-## Generate en_US.UTF-8 locale require by steam incase missing
+## Generate en_US.UTF-8 locale required by Steam in case it's missing
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-        dpkg-reconfigure --frontend=noninteractive locales
+    dpkg-reconfigure --frontend=noninteractive locales
 
-## Update steam to prevent steamguard code timeout
+## Update Steam to prevent steamguard code timeout
 RUN /data/steamcmd/steamcmd.sh +quit
 
 ## Don't set the arg earlier, if you need to rebuild the container
@@ -46,12 +45,13 @@ RUN mkdir -p /data/.steam/sdk32 && \
     cp -v /data/steamcmd/linux64/steamclient.so /data/.steam/sdk64/steamclient.so
 ## END STEAM VERSION
 
-RUN wget -qO dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/d4b71fac-a2fd-4516-ac58-100fb09d796a/e79d6c2a8040b59bf49c0d167ae70a7b/dotnet-sdk-5.0.408-linux-arm64.tar.gz &&\
-     tar -zxf dotnet.tar.gz -C /usr/share/dotnet &&\
-     rm dotnet.tar.gz &&\
-     ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+RUN wget -qO dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/d4b71fac-a2fd-4516-ac58-100fb09d796a/e79d6c2a8040b59bf49c0d167ae70a7b/dotnet-sdk-5.0.408-linux-arm64.tar.gz && \
+    tar -zxf dotnet.tar.gz -C /usr/share/dotnet && \
+    rm dotnet.tar.gz && \
+    ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
 
-RUN wget --user-agent="Mozilla" https://github.com/Pathoschild/SMAPI/releases/download/4.0.8/SMAPI-4.0.8-installer.zip -qO /data/nexus.zip && \
+## Install SMAPI 4.1.10
+RUN wget --user-agent="Mozilla" https://github.com/Pathoschild/SMAPI/releases/download/4.1.10/SMAPI-4.1.10-installer.zip -qO /data/nexus.zip && \
     unzip /data/nexus.zip -d /data/nexus/ && \
     SMAPI_INSTALLER=$(find /data/nexus -name 'SMAPI*.*Installer' -type f -path "*/SMAPI * installer/internal/linux/*" | head -n 1) && \
     /bin/bash -c "SMAPI_NO_TERMINAL=true SMAPI_USE_CURRENT_SHELL=true echo -e '2\n\n' | \"$SMAPI_INSTALLER\" --install --game-path \"$GAME_PATH\"" || :
